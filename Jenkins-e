@@ -4,7 +4,7 @@ pipeline {
       stages{
             stage("GIT checkout"){
             steps{
-                 git 'https://github.com/charanreddy77-a11y/BoxFuse_Clone.git'
+                 git branch: 'main', url: 'https://github.com/charanreddy77-a11y/BoxFuse_Clone.git'
               }
             }
             stage("build"){

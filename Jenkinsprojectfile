@@ -8,9 +8,14 @@ pipeline {
             steps {
                 script {
                     // Checkout the specified branch
-                    def branchName = params.BRANCH_NAME
+                    def branchName = params.BRANCH_NAME.trim()
                     checkout([$class: 'GitSCM', branches: [[name: branchName]], userRemoteConfigs: [[url: 'https://github.com/charanreddy77-a11y/BoxFuse_Clone.git']]])
                 }
+            }
+         }
+         stage("Debugging") {
+            steps {
+                echo "Branch Name: '${params.BRANCH_NAME}'"
             }
          }
         stage("Testing") {
@@ -27,7 +32,7 @@ pipeline {
         }
         stage("Deploy to Dev") {
             when {
-                expression { params.BRANCH_NAME == 'fe/dev' }
+                expression { params.BRANCH_NAME.trim() == 'fe/dev' }
             }
             steps {
                 deployTodevops('13.201.101.82', 'devops', 'devops', 'http://13.201.101.82:8080/manager/text', '/boxfuse-sample-java-war-hello', 'Dev')
@@ -35,7 +40,7 @@ pipeline {
         }
         stage("Deploy to UAT") {
             when {
-                expression { params.BRANCH_NAME == 'fe/qa' }
+                expression { params.BRANCH_NAME.trim() == 'fe/qa' }
             }
             steps {
                 deployTodevops('13.235.76.1', 'devops', 'devops', 'http://13.235.76.1:8080/manager/text', '/boxfuse-sample-java-war-hello', 'UAT')
@@ -43,7 +48,7 @@ pipeline {
         }
         stage("Deploy to Prod") {
             when {
-                expression { params.BRANCH_NAME == 'main' }
+                expression { params.BRANCH_NAME.trim() == 'main' }
             }
             steps {
                 input(message: "Do you want to proceed to PROD?", ok: "Proceed") // Approval step

@@ -1,7 +1,7 @@
 pipeline {
     agent any
     parameters {
-        string(name: 'BRANCH_NAME', defaultValue: ' ', description: 'Specify the branch name to deploy')
+        string(name: 'BRANCH_NAME', defaultValue: '', description: 'Specify the branch name to deploy')
     }
     stages {
         stage("GIT checkout") {
@@ -43,7 +43,7 @@ pipeline {
         }
         stage("Deploy to Prod") {
             when {
-                expression { params.BRANCH_NAME == 'master' }
+                expression { params.BRANCH_NAME == 'main' }
             }
             steps {
                 input(message: "Do you want to proceed to PROD?", ok: "Proceed") // Approval step
